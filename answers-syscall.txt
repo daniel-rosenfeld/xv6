@@ -1,0 +1,11 @@
+the function that called syscall is usertrap()
+
+the number is 0x87fff and it represents the exec 
+
+the prievous mode the cpu was in is machine mode start sets the machine so it will look the last mode was supervisor
+
+the instruction the kernel is panicing at is:
+lw      a3,0(zero)
+the register that coresponds to the veriable num is a3
+
+the kernel crashed because it tried to load from an adress that isnt in its adress space. the scause value is 0xd = 13 which means the adress is caused by a load page fault
