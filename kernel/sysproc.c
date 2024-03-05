@@ -70,14 +70,34 @@ sys_sleep(void)
 }
 
 
-#ifdef LAB_PGTBL
+//#ifdef LAB_PGTBL
 int
 sys_pgaccess(void)
 {
-  // lab pgtbl: your code here.
+  pagetable_t p = myproc()->pagetable;
+  pte_t* current_pte;
+  uint64 starting_address;
+  uint64 num_to_check;
+  uint bitmask = 0;
+  uint64 copy_to;
+
+  argaddr(0, &starting_address);
+  argaddr(1, &num_to_check);
+  argaddr(2, &copy_to);
+
+  for(int i = 0; (i < num_to_check) && (i < 8 * sizeof(bitmask)); i++) {
+    if(*(current_pte = walk(p, starting_address + i * PGSIZE, 0)) & PTE_A){
+      bitmask = bitmask | (1 << i);
+      *current_pte = *current_pte ^ PTE_A;
+    }
+  }
+
+  if(copyout(p, copy_to, (char*)&bitmask, sizeof(bitmask)) < 0){
+    return -1;
+  } 
   return 0;
 }
-#endif
+//#endif
 
 uint64
 sys_kill(void)

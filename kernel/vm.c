@@ -437,3 +437,36 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
     return -1;
   }
 }
+
+void
+vmprint(pagetable_t pagetable)
+{
+  printf("page table %p\n", pagetable);
+
+  for(int i = 0; i < 512; i++){
+    pte_t pte = pagetable[i];
+
+    if((pte & PTE_V) && (pte & (PTE_R|PTE_W|PTE_X)) == 0){
+      // this PTE points to a lower-level page table.
+      printf("..%d: pte %p pa %p\n", i, pte, PTE2PA(pte));
+      uint64 child = PTE2PA(pte);
+
+      for(int j = 0; j < 512; j++){
+        pte_t pte1 = ((pagetable_t)child)[j];
+
+        if((pte1 & PTE_V) && (pte1 & (PTE_R|PTE_W|PTE_X)) == 0){
+          printf(".. ..%d: pte %p pa %p\n", j, pte1, PTE2PA(pte1));
+          uint64 grandchild = PTE2PA(pte1);
+          
+          for(int k = 0; k < 512; k++){
+            pte_t pte2 = ((pagetable_t)grandchild)[k];
+
+            if((pte2 & PTE_V) && (pte2 & (PTE_R|PTE_W|PTE_X))){
+              printf(".. .. ..%d: pte %p pa %p\n", k, pte2, PTE2PA(pte2));
+            }
+          }
+        }
+      } 
+    }
+  }
+}

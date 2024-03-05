@@ -1,0 +1,3 @@
+filestat could be faster this way because the were will not be a call to copy out and all the information could be easly accesed 
+
+pages 0, 1 and 2 contain the text of the procces the user could not read/write to those pages only read. the third to last page contains the trapframe of the process
