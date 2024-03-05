@@ -87,11 +87,17 @@ test1()
   printf("test1 start\n");
   count = 0;
   j = 0;
-  sigalarm(2, periodic);
+  sigalarm(2, periodic);  
   for(i = 0; i < 500000000; i++){
     if(count >= 10)
-      break;
+      break;  
     foo(i, &j);
+    //printf("i: %d, j: %d\n", i, j);
+    if(i + 1 != j)
+    {
+      printf("this is i: %d, this is j: %d, this is count: %d, foo didnt get called\n", i, j, count);
+      j++;
+    }
   }
   if(count < 10){
     printf("\ntest1 failed: too few calls to the handler\n");
@@ -103,6 +109,7 @@ test1()
     // occurred; another is that that registers may not be
     // restored correctly, causing i or j or the address ofj
     // to get an incorrect value.
+    printf("\nthe value of i is: %d and the value of j is: %d", i, j);
     printf("\ntest1 failed: foo() executed fewer times than it was called\n");
   } else {
     printf("test1 passed\n");

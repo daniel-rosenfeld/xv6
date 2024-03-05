@@ -1,0 +1,11 @@
+the arguments are passed to functions using register a0-a7, 13 is stored in register a3
+
+the call to function f is at line 0x26
+
+the address at which printf is located is 0x642
+
+the address that is writen in ra is 0x34
+
+the output is HE110 World
+
+the code will print what ever value is in register a1 this happens because the printf function expects there to be an argument in this register 
